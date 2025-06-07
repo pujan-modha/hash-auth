@@ -45,12 +45,18 @@ const server = Bun.serve({
 
     const corsHeaders = {
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, DELETE",
+      "Access-Control-Allow-Headers":
+        "Content-Type, Authorization, X-Requested-With",
+      "Access-Control-Allow-Credentials": "true",
     };
 
+    // Handle preflight requests
     if (method === "OPTIONS") {
-      return new Response(null, { status: 200, headers: corsHeaders });
+      return new Response(null, {
+        status: 200,
+        headers: corsHeaders,
+      });
     }
 
     try {
