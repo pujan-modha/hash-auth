@@ -22,7 +22,6 @@ async function createEmailHash(email: string): Promise<string> {
     .join("");
 }
 
-// Parse JSON request body with error handling
 async function parseRequestBody(request: Request): Promise<any> {
   try {
     return await request.json();
@@ -44,7 +43,6 @@ const server = Bun.serve({
     const url = new URL(request.url);
     const method = request.method;
 
-    // Configure CORS headers for cross-origin requests
     const corsHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
@@ -56,7 +54,6 @@ const server = Bun.serve({
     }
 
     try {
-      // Handle user registration requests
       if (url.pathname === "/register" && method === "POST") {
         const requestBody = await parseRequestBody(request);
         if (!requestBody?.email || !requestBody?.password) {
@@ -115,7 +112,6 @@ const server = Bun.serve({
         );
       }
 
-      // Handle user login requests
       if (url.pathname === "/login" && method === "POST") {
         const requestBody = await parseRequestBody(request);
         if (!requestBody?.email || !requestBody?.password) {
@@ -183,7 +179,6 @@ const server = Bun.serve({
         );
       }
 
-      // Handle protected user list requests
       if (url.pathname === "/users" && method === "GET") {
         const sessionToken = request.headers
           .get("authorization")
@@ -307,7 +302,6 @@ const server = Bun.serve({
         );
       }
 
-      // Handle user logout requests
       if (url.pathname === "/logout" && method === "POST") {
         const sessionToken = request.headers
           .get("authorization")
@@ -375,44 +369,58 @@ const server = Bun.serve({
         );
       }
 
-      // API information and documentation endpoint
+      // Serve HTML documentation at root path
       if (url.pathname === "/" && method === "GET") {
-        return new Response(
-          JSON.stringify({
-            message: "Secure Authentication API",
-            version: "1.0.0",
-            security: {
-              email_hashing: "SHA-256 with deterministic salt",
-              password_hashing: "Argon2id with random salt",
-              duplicate_prevention: "Enabled via deterministic email hashing",
-            },
-            endpoints: {
-              "POST /register": "Register new user (email, password)",
-              "POST /login": "Login user (email, password)",
-              "GET /users":
-                "Get all users - protected (Authorization: Bearer <sessionId>)",
-              "POST /reset-password":
-                "Reset password - protected (email, currentPassword, newPassword)",
-              "POST /logout": "Logout user - protected",
-              "POST /debug/test-hash": "Test email hashing - development only",
-            },
-            example_usage: {
-              register:
-                'POST /register with {"email": "user@example.com", "password": "securepass123"}',
-              login:
-                'POST /login with {"email": "user@example.com", "password": "securepass123"}',
-              protected_request:
-                "Add header: Authorization: Bearer <sessionId_from_login>",
-            },
-          }),
-          {
+        try {
+          const htmlFile = Bun.file("./index.html");
+          const htmlContent = await htmlFile.text();
+
+          return new Response(htmlContent, {
             status: 200,
-            headers: { "Content-Type": "application/json", ...corsHeaders },
-          }
-        );
+            headers: {
+              "Content-Type": "text/html",
+              ...corsHeaders,
+            },
+          });
+        } catch (error) {
+          return new Response(
+            JSON.stringify({
+              message: "Secure Authentication API",
+              version: "1.0.0",
+              security: {
+                email_hashing: "SHA-256 with deterministic salt",
+                password_hashing: "Argon2id with random salt",
+                duplicate_prevention: "Enabled via deterministic email hashing",
+              },
+              endpoints: {
+                "POST /register": "Register new user (email, password)",
+                "POST /login": "Login user (email, password)",
+                "GET /users":
+                  "Get all users - protected (Authorization: Bearer <sessionId>)",
+                "POST /reset-password":
+                  "Reset password - protected (email, currentPassword, newPassword)",
+                "POST /logout": "Logout user - protected",
+                "POST /debug/test-hash":
+                  "Test email hashing - development only",
+              },
+              example_usage: {
+                register:
+                  'POST /register with {"email": "user@example.com", "password": "securepass123"}',
+                login:
+                  'POST /login with {"email": "user@example.com", "password": "securepass123"}',
+                protected_request:
+                  "Add header: Authorization: Bearer <sessionId_from_login>",
+              },
+            }),
+            {
+              status: 200,
+              headers: { "Content-Type": "application/json", ...corsHeaders },
+            }
+          );
+        }
       }
 
-      // Return 404 for unrecognized routes
+      // 404 for unrecognized routes
       return new Response(
         JSON.stringify({
           error: "Route not found",
@@ -454,7 +462,7 @@ console.log(
 console.log(`Database: users.db (SQLite)`);
 console.log(`Security: Deterministic email hashing + Random password salting`);
 
-// Environment variable check for production deployment
+// ENV check for production deployment
 if (!process.env.EMAIL_SALT) {
   console.log(
     `Warning: Using fallback EMAIL_SALT. Set EMAIL_SALT environment variable in production!`
