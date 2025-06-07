@@ -1,0 +1,1087 @@
+<!-- This template is AI generated! Coz I'm lazy -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hash Authentication Demo</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --background: 0 0% 100%;
+        --foreground: 222.2 84% 4.9%;
+        --card: 0 0% 100%;
+        --card-foreground: 222.2 84% 4.9%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 222.2 84% 4.9%;
+        --primary: 222.2 47.4% 11.2%;
+        --primary-foreground: 210 40% 98%;
+        --secondary: 210 40% 96%;
+        --secondary-foreground: 222.2 84% 4.9%;
+        --muted: 210 40% 96%;
+        --muted-foreground: 215.4 16.3% 46.9%;
+        --accent: 210 40% 96%;
+        --accent-foreground: 222.2 84% 4.9%;
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 210 40% 98%;
+        --border: 214.3 31.8% 91.4%;
+        --input: 214.3 31.8% 91.4%;
+        --ring: 222.2 84% 4.9%;
+        --radius: 0.5rem;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --background: 222.2 84% 4.9%;
+          --foreground: 210 40% 98%;
+          --card: 222.2 84% 4.9%;
+          --card-foreground: 210 40% 98%;
+          --popover: 222.2 84% 4.9%;
+          --popover-foreground: 210 40% 98%;
+          --primary: 210 40% 98%;
+          --primary-foreground: 222.2 47.4% 11.2%;
+          --secondary: 217.2 32.6% 17.5%;
+          --secondary-foreground: 210 40% 98%;
+          --muted: 217.2 32.6% 17.5%;
+          --muted-foreground: 215 20.2% 65.1%;
+          --accent: 217.2 32.6% 17.5%;
+          --accent-foreground: 210 40% 98%;
+          --destructive: 0 62.8% 30.6%;
+          --destructive-foreground: 210 40% 98%;
+          --border: 217.2 32.6% 17.5%;
+          --input: 217.2 32.6% 17.5%;
+          --ring: 212.7 26.8% 83.9%;
+        }
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background-color: hsl(var(--background));
+        color: hsl(var(--foreground));
+        line-height: 1.5;
+        min-height: 100vh;
+        padding: 1rem;
+        font-size: 14px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      .app {
+        background: hsl(var(--card));
+        border: 1px solid hsl(var(--border));
+        border-radius: calc(var(--radius) + 2px);
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1),
+          0 1px 2px -1px rgb(0 0 0 / 0.1);
+        overflow: hidden;
+      }
+
+      .header {
+        padding: 1.5rem;
+        text-align: center;
+        border-bottom: 1px solid hsl(var(--border));
+        background: hsl(var(--muted));
+      }
+
+      .header h1 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: hsl(var(--foreground));
+      }
+
+      .header p {
+        font-size: 0.875rem;
+        color: hsl(var(--muted-foreground));
+        margin-bottom: 1rem;
+      }
+
+      .security-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 0.75rem;
+        margin-top: 1rem;
+      }
+
+      .security-card {
+        background: hsl(var(--card));
+        border: 1px solid hsl(var(--border));
+        border-radius: var(--radius);
+        padding: 0.75rem;
+        text-align: left;
+      }
+
+      .security-card h3 {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: hsl(var(--foreground));
+        margin-bottom: 0.25rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .security-card p {
+        font-size: 0.75rem;
+        color: hsl(var(--muted-foreground));
+        margin: 0;
+      }
+
+      .content {
+        padding: 1.5rem;
+      }
+
+      .session-info {
+        background: hsl(120 60% 10%);
+        border: 1px solid hsl(120 60% 25%);
+        border-radius: var(--radius);
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .session-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+      }
+
+      .session-status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: white;
+      }
+
+      .status-dot {
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+        background: hsl(120 60% 50%);
+      }
+
+      .session-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 0.75rem;
+      }
+
+      .session-detail {
+        background: hsl(var(--card));
+        border: 1px solid hsl(120 60% 85%);
+        border-radius: calc(var(--radius) - 2px);
+        padding: 0.75rem;
+      }
+
+      .session-detail label {
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: hsl(120 60% 25%);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        display: block;
+        margin-bottom: 0.25rem;
+      }
+
+      .session-detail .value {
+        font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas,
+          "Liberation Mono", Menlo, monospace;
+        font-size: 0.75rem;
+        color: hsl(var(--foreground));
+        word-break: break-all;
+      }
+
+      .auth-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .auth-card {
+        background: hsl(var(--card));
+        border: 1px solid hsl(var(--border));
+        border-radius: var(--radius);
+        padding: 1.5rem;
+      }
+
+      .auth-card h2 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: hsl(var(--foreground));
+      }
+
+      .nav-tabs {
+        display: flex;
+        background: hsl(var(--muted));
+        border-radius: var(--radius);
+        padding: 0.25rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid hsl(var(--border));
+      }
+
+      .nav-tab {
+        flex: 1;
+        padding: 0.5rem 0.75rem;
+        background: transparent;
+        border: none;
+        color: hsl(var(--muted-foreground));
+        font-size: 0.875rem;
+        font-weight: 500;
+        border-radius: calc(var(--radius) - 2px);
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+
+      .nav-tab.active {
+        background: hsl(var(--card));
+        color: hsl(var(--foreground));
+        box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      }
+
+      .nav-tab:hover:not(.active) {
+        background: hsl(var(--accent));
+        color: hsl(var(--accent-foreground));
+      }
+
+      .form-section {
+        display: none;
+      }
+
+      .form-section.active {
+        display: block;
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: hsl(var(--foreground));
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        background: hsl(var(--background));
+        border: 1px solid hsl(var(--input));
+        border-radius: var(--radius);
+        font-size: 0.875rem;
+        color: hsl(var(--foreground));
+        transition: all 0.15s ease;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: hsl(var(--ring));
+        box-shadow: 0 0 0 2px hsl(var(--ring) / 0.2);
+      }
+
+      .form-group input::placeholder {
+        color: hsl(var(--muted-foreground));
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+        border-radius: var(--radius);
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.15s ease;
+        border: 1px solid transparent;
+        cursor: pointer;
+        width: 100%;
+        padding: 0.5rem 1rem;
+        background: hsl(var(--primary));
+        color: hsl(var(--primary-foreground));
+        margin-bottom: 0.75rem;
+        gap: 0.5rem;
+        height: 2.25rem;
+      }
+
+      .btn:hover {
+        background: hsl(var(--primary) / 0.9);
+      }
+
+      .btn:active {
+        transform: scale(0.98);
+      }
+
+      .btn.secondary {
+        background: hsl(var(--secondary));
+        color: hsl(var(--secondary-foreground));
+        border: 1px solid hsl(var(--border));
+      }
+
+      .btn.secondary:hover {
+        background: hsl(var(--secondary) / 0.8);
+      }
+
+      .btn.destructive {
+        background: hsl(var(--destructive));
+        color: hsl(var(--destructive-foreground));
+      }
+
+      .btn.destructive:hover {
+        background: hsl(var(--destructive) / 0.9);
+      }
+
+      .btn.small {
+        width: auto;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.75rem;
+        margin: 0;
+        height: 1.75rem;
+      }
+
+      .users-grid {
+        display: grid;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .user-card {
+        background: hsl(var(--card));
+        border: 1px solid hsl(var(--border));
+        border-radius: var(--radius);
+        padding: 1rem;
+      }
+
+      .user-card .user-id {
+        font-size: 0.75rem;
+        color: hsl(var(--muted-foreground));
+        margin-bottom: 0.75rem;
+        font-weight: 500;
+      }
+
+      .user-card .hash-label {
+        font-size: 0.75rem;
+        color: hsl(var(--foreground));
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .user-card .hash {
+        font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas,
+          "Liberation Mono", Menlo, monospace;
+        font-size: 0.6875rem;
+        color: hsl(var(--muted-foreground));
+        word-break: break-all;
+        line-height: 1.4;
+        background: hsl(var(--muted));
+        padding: 0.5rem;
+        border-radius: calc(var(--radius) - 2px);
+        margin-bottom: 0.75rem;
+      }
+
+      .loading {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .spinner {
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid hsl(var(--border));
+        border-top: 2px solid hsl(var(--foreground));
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .empty-state {
+        text-align: center;
+        color: hsl(var(--muted-foreground));
+        margin-top: 2rem;
+        padding: 2rem 1rem;
+      }
+
+      .empty-state-icon {
+        font-size: 2rem;
+        margin-bottom: 0.75rem;
+        opacity: 0.5;
+      }
+
+      /* Toast Styles */
+      .toast-container {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 50;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        max-width: 20rem;
+      }
+
+      .toast {
+        background: hsl(var(--card));
+        border: 1px solid hsl(var(--border));
+        border-radius: var(--radius);
+        padding: 0.75rem;
+        box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
+        opacity: 0;
+        transform: translateX(100%);
+        transition: all 0.3s ease;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .toast.success {
+        border-left: 4px solid hsl(120 60% 50%);
+      }
+
+      .toast.error {
+        border-left: 4px solid hsl(var(--destructive));
+      }
+
+      .toast-content {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+
+      .toast-icon {
+        width: 1rem;
+        height: 1rem;
+        flex-shrink: 0;
+        margin-top: 0.125rem;
+      }
+
+      .toast-message {
+        flex: 1;
+        font-size: 0.875rem;
+        color: hsl(var(--foreground));
+      }
+
+      .toast-close {
+        background: none;
+        border: none;
+        color: hsl(var(--muted-foreground));
+        cursor: pointer;
+        padding: 0;
+        width: 1rem;
+        height: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 2px;
+        transition: background-color 0.15s ease;
+      }
+
+      .toast-close:hover {
+        background: hsl(var(--muted));
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        body {
+          padding: 0.5rem;
+        }
+
+        .header {
+          padding: 1rem;
+        }
+
+        .header h1 {
+          font-size: 1.25rem;
+        }
+
+        .content {
+          padding: 1rem;
+        }
+
+        .auth-section {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+
+        .security-info {
+          grid-template-columns: 1fr;
+        }
+
+        .session-details {
+          grid-template-columns: 1fr;
+        }
+
+        .nav-tab {
+          padding: 0.5rem;
+          font-size: 0.75rem;
+        }
+
+        .toast-container {
+          top: 0.5rem;
+          right: 0.5rem;
+          left: 0.5rem;
+          max-width: none;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .header {
+          padding: 0.75rem;
+        }
+
+        .content {
+          padding: 0.75rem;
+        }
+
+        .auth-card {
+          padding: 1rem;
+        }
+
+        .session-info {
+          padding: 0.75rem;
+        }
+
+        .session-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="app">
+        <div class="header">
+          <h1>Hash Authentication Demo</h1>
+          <p>
+            Secure password hashing implementation with deterministic email
+            processing
+          </p>
+
+          <div class="security-info">
+            <div class="security-card">
+              <h3>Email Hashing</h3>
+              <p>SHA-256 with deterministic salt for duplicate prevention</p>
+            </div>
+            <div class="security-card">
+              <h3>Password Hashing</h3>
+              <p>Argon2id with random salt for maximum security</p>
+            </div>
+            <div class="security-card">
+              <h3>Session Management</h3>
+              <p>Bearer token authentication with server-side validation</p>
+            </div>
+            <div class="security-card">
+              <h3>API Endpoint</h3>
+              <p>http://localhost:5000 with CORS enabled</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="content">
+          <!-- Session Info -->
+          <div id="sessionInfo" class="session-info hidden">
+            <div class="session-header">
+              <div class="session-status">
+                <div class="status-dot"></div>
+                <span>Active Session</span>
+              </div>
+              <button onclick="logout()" class="btn destructive small">
+                End Session
+              </button>
+            </div>
+
+            <div class="session-details">
+              <div class="session-detail">
+                <label>Session ID</label>
+                <div class="value" id="sessionIdDisplay">-</div>
+              </div>
+              <div class="session-detail">
+                <label>Connection Status</label>
+                <div class="value">Connected to localhost:5000</div>
+              </div>
+              <div class="session-detail">
+                <label>Authentication Method</label>
+                <div class="value">Bearer Token</div>
+              </div>
+              <div class="session-detail">
+                <label>Session Started</label>
+                <div class="value" id="sessionTimeDisplay">-</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Auth Section -->
+          <div id="authSection" class="auth-section">
+            <!-- Register Card -->
+            <div class="auth-card">
+              <h2>Register</h2>
+              <form onsubmit="register(event)">
+                <div class="form-group">
+                  <label>Email Address</label>
+                  <input
+                    type="email"
+                    id="regEmail"
+                    required
+                    placeholder="user@example.com"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Password</label>
+                  <input
+                    type="password"
+                    id="regPassword"
+                    required
+                    placeholder="Enter secure password"
+                  />
+                </div>
+                <button type="submit" class="btn">
+                  <span class="btn-text">Create Account</span>
+                  <span class="loading hidden">
+                    <div class="spinner"></div>
+                    Processing...
+                  </span>
+                </button>
+              </form>
+            </div>
+
+            <!-- Login Card -->
+            <div class="auth-card">
+              <h2>Login</h2>
+              <form onsubmit="login(event)">
+                <div class="form-group">
+                  <label>Email Address</label>
+                  <input
+                    type="email"
+                    id="loginEmail"
+                    required
+                    placeholder="user@example.com"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Password</label>
+                  <input
+                    type="password"
+                    id="loginPassword"
+                    required
+                    placeholder="Enter password"
+                  />
+                </div>
+                <button type="submit" class="btn">
+                  <span class="btn-text">Sign In</span>
+                  <span class="loading hidden">
+                    <div class="spinner"></div>
+                    Authenticating...
+                  </span>
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Navigation for authenticated users -->
+          <div id="adminTabs" class="nav-tabs hidden">
+            <button class="nav-tab active" onclick="switchTab('users')">
+              Database Records
+            </button>
+            <button class="nav-tab" onclick="switchTab('reset')">
+              Password Reset
+            </button>
+          </div>
+
+          <!-- Users Database -->
+          <div id="users" class="form-section">
+            <button onclick="loadUsers()" class="btn secondary">
+              <span class="btn-text">Load Database Records</span>
+              <span class="loading hidden">
+                <div class="spinner"></div>
+                Loading...
+              </span>
+            </button>
+            <div id="usersContent"></div>
+          </div>
+
+          <!-- Password Reset -->
+          <div id="reset" class="form-section">
+            <form onsubmit="resetPassword(event)">
+              <div class="form-group">
+                <label>Email Address</label>
+                <input
+                  type="email"
+                  id="resetEmail"
+                  required
+                  placeholder="user@example.com"
+                />
+              </div>
+              <div class="form-group">
+                <label>Current Password</label>
+                <input
+                  type="password"
+                  id="currentPassword"
+                  required
+                  placeholder="Current password"
+                />
+              </div>
+              <div class="form-group">
+                <label>New Password</label>
+                <input
+                  type="password"
+                  id="newPassword"
+                  required
+                  placeholder="New password"
+                />
+              </div>
+              <button type="submit" class="btn">
+                <span class="btn-text">Update Password</span>
+                <span class="loading hidden">
+                  <div class="spinner"></div>
+                  Updating...
+                </span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+      const API_BASE = "http://localhost:5000";
+      let currentSession = localStorage.getItem("sessionId");
+      let currentTab = "users";
+      let sessionStartTime = localStorage.getItem("sessionStartTime");
+
+      // Initialize app
+      document.addEventListener("DOMContentLoaded", function () {
+        if (currentSession) {
+          showAuthenticatedState();
+        }
+      });
+
+      // Toast system
+      function showToast(message, type = "error") {
+        const container = document.getElementById("toastContainer");
+        const toast = document.createElement("div");
+        toast.className = `toast ${type}`;
+
+        const iconSvg =
+          type === "success"
+            ? `<svg class="toast-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m5 13 4 4L19 7"></path></svg>`
+            : `<svg class="toast-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+
+        toast.innerHTML = `
+                <div class="toast-content">
+                    ${iconSvg}
+                    <div class="toast-message">${message}</div>
+                    <button class="toast-close" onclick="this.parentElement.parentElement.remove()">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            `;
+
+        container.appendChild(toast);
+
+        // Trigger animation
+        setTimeout(() => toast.classList.add("show"), 10);
+
+        // Auto remove
+        setTimeout(() => {
+          toast.classList.remove("show");
+          setTimeout(() => toast.remove(), 300);
+        }, 5000);
+      }
+
+      // Tab switching for admin functions
+      function switchTab(tabName) {
+        document.querySelectorAll("#adminTabs .nav-tab").forEach((tab) => {
+          tab.classList.remove("active");
+        });
+        event.target.classList.add("active");
+
+        document.querySelectorAll(".form-section").forEach((section) => {
+          section.classList.remove("active");
+        });
+        document.getElementById(tabName).classList.add("active");
+
+        currentTab = tabName;
+
+        if (tabName === "users") {
+          loadUsers();
+        }
+      }
+
+      // Show authenticated state
+      function showAuthenticatedState() {
+        document.getElementById("sessionInfo").classList.remove("hidden");
+        document.getElementById("authSection").classList.add("hidden");
+        document.getElementById("adminTabs").classList.remove("hidden");
+        document.getElementById("users").classList.add("active");
+
+        // Update session display
+        document.getElementById("sessionIdDisplay").textContent =
+          currentSession;
+
+        if (sessionStartTime) {
+          const startTime = new Date(parseInt(sessionStartTime));
+          document.getElementById("sessionTimeDisplay").textContent =
+            startTime.toLocaleString();
+        }
+
+        loadUsers();
+      }
+
+      // Logout
+      function logout() {
+        currentSession = null;
+        sessionStartTime = null;
+        localStorage.removeItem("sessionId");
+        localStorage.removeItem("sessionStartTime");
+        document.getElementById("sessionInfo").classList.add("hidden");
+        document.getElementById("authSection").classList.remove("hidden");
+        document.getElementById("adminTabs").classList.add("hidden");
+
+        // Hide admin sections
+        document.querySelectorAll(".form-section").forEach((section) => {
+          section.classList.remove("active");
+        });
+
+        showToast("Session ended successfully", "success");
+      }
+
+      // Show loading state
+      function setLoading(form, loading) {
+        const btnText = form.querySelector(".btn-text");
+        const loadingEl = form.querySelector(".loading");
+
+        if (loading) {
+          btnText.classList.add("hidden");
+          loadingEl.classList.remove("hidden");
+        } else {
+          btnText.classList.remove("hidden");
+          loadingEl.classList.add("hidden");
+        }
+      }
+
+      // Register
+      async function register(event) {
+        event.preventDefault();
+        const form = event.target;
+        setLoading(form, true);
+
+        const email = document.getElementById("regEmail").value;
+        const password = document.getElementById("regPassword").value;
+
+        try {
+          const response = await fetch(`${API_BASE}/register`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            currentSession = data.sessionId;
+            sessionStartTime = Date.now().toString();
+            localStorage.setItem("sessionId", currentSession);
+            localStorage.setItem("sessionStartTime", sessionStartTime);
+            showAuthenticatedState();
+            showToast(data.message, "success");
+            document.getElementById("regEmail").value = "";
+            document.getElementById("regPassword").value = "";
+          } else {
+            showToast(data.error);
+          }
+        } catch (error) {
+          showToast("Network error occurred");
+        } finally {
+          setLoading(form, false);
+        }
+      }
+
+      // Login
+      async function login(event) {
+        event.preventDefault();
+        const form = event.target;
+        setLoading(form, true);
+
+        const email = document.getElementById("loginEmail").value;
+        const password = document.getElementById("loginPassword").value;
+
+        try {
+          const response = await fetch(`${API_BASE}/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            currentSession = data.sessionId;
+            sessionStartTime = Date.now().toString();
+            localStorage.setItem("sessionId", currentSession);
+            localStorage.setItem("sessionStartTime", sessionStartTime);
+            showAuthenticatedState();
+            showToast(data.message, "success");
+            document.getElementById("loginEmail").value = "";
+            document.getElementById("loginPassword").value = "";
+          } else {
+            showToast(data.error);
+          }
+        } catch (error) {
+          showToast("Network error occurred");
+        } finally {
+          setLoading(form, false);
+        }
+      }
+
+      // Load users
+      async function loadUsers() {
+        if (!currentSession) {
+          showToast("Please authenticate first");
+          return;
+        }
+
+        const btn = document.querySelector("#users .btn");
+        const btnText = btn.querySelector(".btn-text");
+        const loading = btn.querySelector(".loading");
+
+        btnText.classList.add("hidden");
+        loading.classList.remove("hidden");
+
+        try {
+          const response = await fetch(`${API_BASE}/users`, {
+            headers: { Authorization: `Bearer ${currentSession}` },
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            showToast(
+              `Retrieved ${data.users.length} records from database`,
+              "success"
+            );
+            displayUsers(data.users);
+          } else {
+            showToast(data.error);
+          }
+        } catch (error) {
+          showToast("Network error occurred");
+        } finally {
+          btnText.classList.remove("hidden");
+          loading.classList.add("hidden");
+        }
+      }
+
+      // Display users
+      function displayUsers(users) {
+        const content = document.getElementById("usersContent");
+
+        if (users.length === 0) {
+          content.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📊</div>
+                        <p>No records found in database</p>
+                        <p style="font-size: 0.75rem; margin-top: 0.5rem; opacity: 0.7;">Register a user to see hashed data</p>
+                    </div>
+                `;
+          return;
+        }
+
+        const html = users
+          .map(
+            (user) => `
+                <div class="user-card">
+                    <div class="user-id">Record #${user.id} • Created: ${user.created_at}</div>
+                    <div class="hash-label">Email Hash (SHA-256 + Salt)</div>
+                    <div class="hash">${user.email_hash}</div>
+                    <div class="hash-label">Password Hash (Argon2id + Random Salt)</div>
+                    <div class="hash">${user.password_hash}</div>
+                </div>
+            `
+          )
+          .join("");
+
+        content.innerHTML = `<div class="users-grid">${html}</div>`;
+      }
+
+      // Reset password
+      async function resetPassword(event) {
+        event.preventDefault();
+
+        if (!currentSession) {
+          showToast("Please authenticate first");
+          return;
+        }
+
+        const form = event.target;
+        setLoading(form, true);
+
+        const email = document.getElementById("resetEmail").value;
+        const currentPassword =
+          document.getElementById("currentPassword").value;
+        const newPassword = document.getElementById("newPassword").value;
+
+        try {
+          const response = await fetch(`${API_BASE}/reset-password`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${currentSession}`,
+            },
+            body: JSON.stringify({ email, currentPassword, newPassword }),
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            showToast(data.message, "success");
+            document.getElementById("resetEmail").value = "";
+            document.getElementById("currentPassword").value = "";
+            document.getElementById("newPassword").value = "";
+          } else {
+            showToast(data.error);
+          }
+        } catch (error) {
+          showToast("Network error occurred");
+        } finally {
+          setLoading(form, false);
+        }
+      }
+    </script>
+  </body>
+</html>
