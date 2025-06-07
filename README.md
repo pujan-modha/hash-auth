@@ -6,9 +6,6 @@ Read more about this project on my blog: [https://pujan.pm/writing/hash-auth](ht
 
 Live demo: [https://hash-auth.pujan.pm](https://hash-auth.pujan.pm)
 
-- Email: `demo@example.com`
-- Password: `demo12345`
-
 ## Overview
 
 This project demonstrates a secure approach to user authentication by never storing plaintext emails or passwords. Instead, it uses deterministic hashing for emails and strong, salted password hashing for credentials. The system is inspired by recent data breaches and aims to provide a safer alternative for platforms where user privacy is paramount.
